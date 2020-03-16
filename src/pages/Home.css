@@ -1,3 +1,12 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
+.container {
+  text-align: center;
+}
+.status {
+  color: var(--ion-color-start);
+}
+.break-time {
+  color: var(--ion-color-break-time);
+}

@@ -6,9 +6,8 @@ import {
   IonToolbar
 } from "@ionic/react";
 import React from "react";
-import ExploreContainer from "../components/ExploreContainer";
 import "./Home.css";
-import { PomodoroTimer, usePomodoroTimer } from "../hooks/usePomodoroTimer";
+import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 
 const Home: React.FC = () => {
   const { pomodoroTimer } = usePomodoroTimer();
@@ -25,8 +24,14 @@ const Home: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {pomodoroTimer.time}
-        <ExploreContainer />
+        <div className="container">
+          <div className="timer">
+            <h1 className="title">{pomodoroTimer.time}</h1>
+          </div>
+          <div className={pomodoroTimer.breakTime ? "status break-time" : "status"}>
+            {pomodoroTimer.breakTime ? "休憩中" : "作業中"}
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );
