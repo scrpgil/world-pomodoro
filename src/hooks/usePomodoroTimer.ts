@@ -40,7 +40,7 @@ export function usePomodoroTimer() {
           pTimer.time + " " + breakTimeText + " みんなでポモドーロ";
         return pTimer;
       });
-    }, 1000);
+    }, 100);
     return () => clearInterval(interval);
   }, []);
   return {
