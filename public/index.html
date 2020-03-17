@@ -15,16 +15,30 @@
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/assets/icon/favicon.png" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="%PUBLIC_URL%/assets/icon/favicon.png"
+    />
 
     <!-- add to homescreen for ios -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="みんなでポモドーロ" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <script>
+      window.addEventListener("load", function() {
+        if (window.Notification && Notification.permission !== "granted") {
+          Notification.requestPermission(function(status) {
+            if (Notification.permission !== status) {
+              Notification.permission = status;
+            }
+          });
+        }
+      });
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
   </body>
-
 </html>

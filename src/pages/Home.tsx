@@ -10,7 +10,7 @@ import "./Home.css";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 
 const Home: React.FC = () => {
-  const { pomodoroTimer } = usePomodoroTimer();
+  const { pomodoroTimer, getBreakTimeText } = usePomodoroTimer();
   return (
     <IonPage>
       <IonHeader>
@@ -21,15 +21,17 @@ const Home: React.FC = () => {
       <IonContent>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">みんなでポモドーロ</IonTitle>
           </IonToolbar>
         </IonHeader>
         <div className="container">
           <div className="timer">
             <h1 className="title">{pomodoroTimer.time}</h1>
           </div>
-          <div className={pomodoroTimer.breakTime ? "status break-time" : "status"}>
-            {pomodoroTimer.breakTime ? "休憩中" : "作業中"}
+          <div
+            className={pomodoroTimer.breakTime ? "status break-time" : "status"}
+          >
+            {getBreakTimeText(pomodoroTimer.breakTime)}
           </div>
         </div>
       </IonContent>

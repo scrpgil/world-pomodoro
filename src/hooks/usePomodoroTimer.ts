@@ -24,17 +24,33 @@ export function usePomodoroTimer() {
       breakTime: breakTime
     };
   };
+  const pushNotiaction = (text: string) => {
+    if (window.Notification && Notification.permission === "granted") {
+      new Notification(text);
+    }
+  };
   const [pomodoroTimer, setPomodoroTimer] = useState<PomodoroTimer>(
     calcPomodoroTimer()
   );
+  let beforeBreakTimeStatus = false;
+  const getBreakTimeText = (breakTime: boolean): string => {
+    let breakTimeText = "";
+    if (breakTime) {
+      breakTimeText = "休憩中";
+    } else {
+      breakTimeText = "作業中";
+    }
+    return breakTimeText;
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       setPomodoroTimer(() => {
         const pTimer = calcPomodoroTimer();
-        let breakTimeText = "作業中";
-        if (pTimer.breakTime) {
-          breakTimeText = "休憩";
+        let breakTimeText: string = getBreakTimeText(pTimer.breakTime);
+        if (pTimer.breakTime != beforeBreakTimeStatus) {
+          beforeBreakTimeStatus = pTimer.breakTime;
+          pushNotiaction(breakTimeText);
         }
         document.title =
           pTimer.time + " " + breakTimeText + " みんなでポモドーロ";
@@ -45,6 +61,7 @@ export function usePomodoroTimer() {
   }, []);
   return {
     pomodoroTimer,
-    setPomodoroTimer
+    setPomodoroTimer,
+    getBreakTimeText
   };
 }
