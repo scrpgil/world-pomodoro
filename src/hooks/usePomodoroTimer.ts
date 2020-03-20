@@ -24,9 +24,21 @@ export function usePomodoroTimer() {
       breakTime: breakTime
     };
   };
-  const pushNotiaction = (text: string) => {
+  const pushNotiaction = (text: string, breakTime: boolean) => {
     if (window.Notification && Notification.permission === "granted") {
-      new Notification(text);
+      var title = "";
+      var body = "";
+      if (breakTime) {
+        body = "25 minutes of work done.";
+        title = "Time for break";
+      } else {
+        body = "Your break of 5 minutes is over.";
+        title = "Break over";
+      }
+      var options = {
+        body: body
+      };
+      new Notification(title, options);
     }
   };
   const [pomodoroTimer, setPomodoroTimer] = useState<PomodoroTimer>(
@@ -48,9 +60,9 @@ export function usePomodoroTimer() {
       setPomodoroTimer(() => {
         const pTimer = calcPomodoroTimer();
         let breakTimeText: string = getBreakTimeText(pTimer.breakTime);
-        if (pTimer.breakTime != beforeBreakTimeStatus) {
+        if (pTimer.breakTime !== beforeBreakTimeStatus) {
           beforeBreakTimeStatus = pTimer.breakTime;
-          pushNotiaction(breakTimeText);
+          pushNotiaction(breakTimeText, beforeBreakTimeStatus);
         }
         document.title =
           pTimer.time + " " + breakTimeText + " みんなでポモドーロ";

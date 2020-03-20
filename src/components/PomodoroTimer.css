@@ -1,0 +1,25 @@
+.pomodoro-timer-wrapper {
+  background-color: #3f3f3f;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+.timer {
+  width: 130px;
+  margin-right: 6px;
+  font-size: 24px;
+  font-weight: 500;
+  padding: 6px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.status {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  border-radius: 2px;
+  background-color: var(--ion-color-start);
+}
+.break-time {
+  background-color: var(--ion-color-break-time);
+}

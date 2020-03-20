@@ -2,39 +2,60 @@ import {
   IonContent,
   IonHeader,
   IonPage,
+  IonButtons,
+  IonTextarea,
   IonTitle,
+  IonButton,
+  IonIcon,
+  IonFooter,
   IonToolbar
 } from "@ionic/react";
-import React from "react";
+import React, { useState } from "react";
 import "./Home.css";
+import { send } from "ionicons/icons";
+import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
+import PomodoroTimer from "../components/PomodoroTimer";
 
+declare module "react-textarea-autosize";
 const Home: React.FC = () => {
-  const { pomodoroTimer, getBreakTimeText } = usePomodoroTimer();
+  const { pomodoroTimer } = usePomodoroTimer();
+
+  const [text, setText] = useState<string>("");
+
+  const handleChange = (event: any) => {
+    setText(event.target.value);
+  };
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar className="p-toolbar">
           <IonTitle>みんなでポモドーロ</IonTitle>
+          <IonButtons slot="end">
+            <PomodoroTimer
+              time={pomodoroTimer.time}
+              breakTime={pomodoroTimer.breakTime}
+            />
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">みんなでポモドーロ</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <div className="container">
-          <div className="timer">
-            <h1 className="title">{pomodoroTimer.time}</h1>
-          </div>
-          <div
-            className={pomodoroTimer.breakTime ? "status break-time" : "status"}
+      <IonContent />
+      <IonFooter className="ion-no-border">
+        <div
+          className={text != "" ? "p-textarea active" : "p-textarea"}
+        >
+          <TextareaAutosize
+            placeholder="メッセージを書く"
+            value={text}
+            onChange={handleChange}
           >
-            {getBreakTimeText(pomodoroTimer.breakTime)}
-          </div>
+            {""}
+          </TextareaAutosize>
+          <IonButton className="send-button" fill="clear">
+            <IonIcon slot="icon-only" icon={send} />
+          </IonButton>
         </div>
-      </IonContent>
+      </IonFooter>
     </IonPage>
   );
 };

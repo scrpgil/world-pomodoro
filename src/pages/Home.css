@@ -4,9 +4,35 @@ ion-content ion-toolbar {
 .container {
   text-align: center;
 }
-.status {
-  color: var(--ion-color-start);
+.p-textarea {
+  margin: 12px;
+  display: flex;
+  align-items: center;
+  background-color: #1f2124;
+  border-radius: 8px;
+  border: 1px solid #797b7d;
+  padding: 2px 4px;
 }
-.break-time {
-  color: var(--ion-color-break-time);
+.p-textarea textarea {
+  color: #797b7d;
+  border: none;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  resize: none;
+}
+.p-textarea .send-button {
+  color: #37393b;
+  padding: 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+  --padding-start: 0px;
+  --padding-end: 0px;
+}
+.p-textarea.active textarea {
+  color: #fff;
+}
+.p-textarea.active .send-button {
+  background-color: #266c52;
+  color: #fff;
 }

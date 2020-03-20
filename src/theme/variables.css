@@ -74,6 +74,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-color-start: #ee7975;
+  --ion-color-break-time: #90e493;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -220,8 +223,6 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-950: #f3f3f3;
 
     --ion-item-background: #1a1b1e;
-    --ion-color-start: #ee7975;
-    --ion-color-break-time: #90e493;
   }
 
   ion-title.title-large {
