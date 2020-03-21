@@ -15,8 +15,21 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
+export default auth;
 
-export const authenticateAnonymously = () => {
-  return firebase.auth().signInAnonymously();
+export const getTalks = (chatRoomId: string) => {
+  return db.collection(`chat_rooms/${chatRoomId}/talks`).orderBy('created_at');
 };
 
+export const addTalks = (chatRoomId: string, userId: string, body: string) => {
+  return db.collection(`chat_rooms/${chatRoomId}/talks`).add({
+    created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    uid: userId,
+    body: body
+  });
+};
+
+export const addChatRooms = () => {
+  return db.collection(`chat_rooms`).add({ name: "" });
+};

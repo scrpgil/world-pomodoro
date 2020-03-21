@@ -36,3 +36,19 @@ ion-content ion-toolbar {
   background-color: #266c52;
   color: #fff;
 }
+.chat-room-wrapper {
+}
+.talk-wrapper {
+  border-bottom: 1px solid #5b5b5b;
+  padding: 12px;
+}
+.talk-wrapper .talk-header {
+  color: #99999c;
+  padding-bottom: 12px;
+}
+.talk-wrapper .talk-body {
+  font-family: "aahub";
+  padding-bottom: 12px;
+  white-space: pre;
+  user-select: auto;
+}

@@ -5,6 +5,7 @@ import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, IonSplitPane } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
+import { AuthProvider } from "./context/auth";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -28,27 +29,29 @@ import "./theme/variables.css";
 const App: React.FC = () => {
   const [selectedPage, setSelectedPage] = useState("");
   return (
-    <IonApp>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <IonSplitPane contentId="main">
-            <Menu selectedPage={selectedPage} />
-            <IonRouterOutlet id="main">
-              <Route
-                path="/page/:name"
-                render={props => {
-                  setSelectedPage(props.match.params.name);
-                  return <Page {...props} />;
-                }}
-                exact={true}
-              />
-              <Route path="/home" component={Home} exact={true} />
-              <Route exact path="/" render={() => <Redirect to="/home" />} />
-            </IonRouterOutlet>
-          </IonSplitPane>
-        </IonRouterOutlet>
-      </IonReactRouter>
-    </IonApp>
+    <AuthProvider>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <IonSplitPane contentId="main">
+              <Menu selectedPage={selectedPage} />
+              <IonRouterOutlet id="main">
+                <Route
+                  path="/page/:name"
+                  render={props => {
+                    setSelectedPage(props.match.params.name);
+                    return <Page {...props} />;
+                  }}
+                  exact={true}
+                />
+                <Route path="/home" component={Home} exact={true} />
+                <Route exact path="/" render={() => <Redirect to="/home" />} />
+              </IonRouterOutlet>
+            </IonSplitPane>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    </AuthProvider>
   );
 };
 

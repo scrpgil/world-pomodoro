@@ -227,3 +227,9 @@ body {
 ion-title.title-large {
   --color: white;
 }
+
+@font-face {
+  font-family: "aahub";
+  src: url("/assets/fonts/RobotoJAA-Medium_light.woff2") format("woff2");
+  font-display: swap;
+}
