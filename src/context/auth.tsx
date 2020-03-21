@@ -1,7 +1,7 @@
 import { User } from "firebase";
 import React, { createContext, useEffect, useState } from "react";
 
-import auth from "../services/firestore";
+import auth, { authenticateAnonymously } from "../services/firebase";
 
 // Contextの型を用意
 interface IAuthContext {
@@ -11,6 +11,7 @@ interface IAuthContext {
 // Contextを宣言。Contextの中身を {currentUser: undefined} と定義
 const AuthContext = createContext<IAuthContext>({ currentUser: undefined });
 
+authenticateAnonymously();
 const AuthProvider = (props: any) => {
   // Contextに持たせるcurrentUserは内部的にはuseStateで管理
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(

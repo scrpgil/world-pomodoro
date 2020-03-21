@@ -127,5 +127,12 @@ ion-note {
 }
 
 ion-item.selected {
-  --color: var(--ion-color-primary);
+  --color: #fff;
+}
+
+.p-menu-item {
+  --color: #6E6D70;
+}
+.p-menu-add-chat {
+  --color: #969699;
 }

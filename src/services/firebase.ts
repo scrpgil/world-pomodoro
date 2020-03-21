@@ -18,8 +18,19 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 export default auth;
 
+export const authenticateAnonymously = () => {
+  return firebase.auth().signInAnonymously();
+};
+
+export const getChatRoom = (chatRoomId: string) => {
+  return db
+    .collection(`chat_rooms`)
+    .doc(chatRoomId)
+    .get();
+};
+
 export const getTalks = (chatRoomId: string) => {
-  return db.collection(`chat_rooms/${chatRoomId}/talks`).orderBy('created_at');
+  return db.collection(`chat_rooms/${chatRoomId}/talks`).orderBy("created_at");
 };
 
 export const addTalks = (chatRoomId: string, userId: string, body: string) => {
@@ -30,6 +41,12 @@ export const addTalks = (chatRoomId: string, userId: string, body: string) => {
   });
 };
 
-export const addChatRooms = () => {
-  return db.collection(`chat_rooms`).add({ name: "" });
+export const addChatRooms = (title: string) => {
+  return db
+    .collection(`chat_rooms`)
+    .add({ title })
+    .then(ref => {
+      console.log("Added document with ID: ", ref.id);
+      return ref.id;
+    });
 };

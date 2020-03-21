@@ -18,7 +18,8 @@ import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { useChats } from "../hooks/useChats";
 import PomodoroTimer from "../components/PomodoroTimer";
-import { AuthContext } from "../context/auth";
+import { AuthContext } from "../context/Auth";
+import { ChannelContext } from "../context/Channel";
 
 declare module "react-textarea-autosize";
 const Home: React.FC = () => {
@@ -27,14 +28,11 @@ const Home: React.FC = () => {
   const [text, setText] = useState<string>("");
   const [rendered, setRendered] = useState<boolean>(false);
   const { currentUser } = useContext(AuthContext);
+  const { currentChannel } = useContext(ChannelContext);
 
-  const [
-    sendMessage,
-    createChat,
-    currentChatId,
-    currentChatMessages,
-    setCurrentChatId
-  ] = useChats();
+  const [currentChat, sendMessage, currentChatMessages, createChat] = useChats(
+    currentChannel
+  );
 
   const handleChange = (event: any) => {
     setText(event.target.value);
@@ -64,7 +62,7 @@ const Home: React.FC = () => {
   useEffect(
     () => {
       if (!rendered) return;
-      scrollToTheBottom(300);
+      scrollToTheBottom(0);
     },
     [currentChatMessages]
   );
@@ -78,7 +76,10 @@ const Home: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>#general</IonTitle>
+          <IonTitle>
+            {currentChat ? currentChat.title : ""}
+            <span>#{currentChannel}</span>
+          </IonTitle>
           <IonButtons slot="end">
             <PomodoroTimer
               time={pomodoroTimer.time}

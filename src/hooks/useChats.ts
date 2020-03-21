@@ -1,46 +1,60 @@
 import { useState, useEffect } from "react";
-import { getTalks, addTalks } from "../services/firestore";
+import {
+  addChatRooms,
+  getChatRoom,
+  getTalks,
+  addTalks
+} from "../services/firebase";
 import { convDateFormat } from "../utils/utils";
 
-export function useChats() {
-  const [currentChatId, setCurrentChatId] = useState(null);
+export function useChats(channelId: string) {
+  const [currentChat, setCurrentChat] = useState(null);
   const [currentChatMessages, setCurrentChatMessages] = useState<any>([]);
 
   useEffect(
     () => {
-      getTalks("general").onSnapshot(snapshot => {
+      getChatRoom(channelId).then(doc => {
+        if (doc.data()) {
+          const data: any = doc.data();
+          data.id = doc.id;
+          setCurrentChat(data);
+        }
+      });
+      getTalks(channelId).onSnapshot(snapshot => {
+        let talks: any = [];
         if (snapshot.empty) {
           console.log("No matching documents.");
-          return;
+        } else {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            data.id = doc.id;
+            talks.push(data);
+            data.display_created_at = convDateFormat(data.created_at);
+          });
         }
-        let talks: any = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          data.id = doc.id;
-          talks.push(data);
-          data.display_created_at = convDateFormat(data.created_at);
-        });
         setCurrentChatMessages(talks);
       });
     },
-    [currentChatId]
+    [channelId]
   );
   const sendMessage = (chatName: string, body: string) => {
-    addTalks("general", chatName, body);
+    addTalks(channelId, chatName, body);
   };
-  const createChat = (recipient: string, chatName: string) => {
-    // const fullChatName = `${chatName}--${uuid.v4()}`;
-    // saveToDatabase(`/${recipient}/chats/${fullChatName}`, fullChatName);
-    // saveToDatabase(`/${userId}/chats/${fullChatName}`, fullChatName);
-    // saveToDatabase(`/chats/${fullChatName}/messages`, {});
-    // setCurrentChat(fullChatName);
+  const createChat = (chatName: string) => {
+    return new Promise(resolve => {
+      getChatRoom(chatName).then(doc => {
+        if (doc.data()) {
+          const data: any = doc.data();
+          data.id = doc.id;
+          setCurrentChat(data);
+          resolve({ title: data.title, id: data.id });
+        } else {
+          const id = addChatRooms(chatName);
+          resolve({ title: chatName, id: id });
+        }
+      });
+    });
   };
 
-  return [
-    sendMessage,
-    createChat,
-    currentChatId,
-    currentChatMessages,
-    setCurrentChatId
-  ];
+  return [currentChat, sendMessage, currentChatMessages, createChat];
 }

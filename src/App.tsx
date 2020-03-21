@@ -1,11 +1,11 @@
 import Menu from "./components/Menu";
-import Page from "./pages/Page";
-import React, { useState } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, IonSplitPane } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
-import { AuthProvider } from "./context/auth";
+import { AuthProvider } from "./context/Auth";
+import { ChannelProvider } from "./context/Channel";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -27,30 +27,27 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 const App: React.FC = () => {
-  const [selectedPage, setSelectedPage] = useState("");
   return (
     <AuthProvider>
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <IonSplitPane contentId="main">
-              <Menu selectedPage={selectedPage} />
-              <IonRouterOutlet id="main">
-                <Route
-                  path="/page/:name"
-                  render={props => {
-                    setSelectedPage(props.match.params.name);
-                    return <Page {...props} />;
-                  }}
-                  exact={true}
-                />
-                <Route path="/home" component={Home} exact={true} />
-                <Route exact path="/" render={() => <Redirect to="/home" />} />
-              </IonRouterOutlet>
-            </IonSplitPane>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
+      <ChannelProvider>
+        <IonApp>
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <IonSplitPane contentId="main">
+                <Menu />
+                <IonRouterOutlet id="main">
+                  <Route path="/home" component={Home} exact={true} />
+                  <Route
+                    exact
+                    path="/"
+                    render={() => <Redirect to="/home" />}
+                  />
+                </IonRouterOutlet>
+              </IonSplitPane>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </IonApp>
+      </ChannelProvider>
     </AuthProvider>
   );
 };

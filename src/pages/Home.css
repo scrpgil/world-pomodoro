@@ -1,6 +1,11 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
+ion-title span {
+  color: #99999c;
+  font-size: 12px;
+  margin-left: 4px;
+}
 .container {
   text-align: center;
 }
@@ -14,6 +19,7 @@ ion-content ion-toolbar {
   padding: 2px 4px;
 }
 .p-textarea textarea {
+  font-family: "aahub";
   color: #797b7d;
   border: none;
   outline: none;
