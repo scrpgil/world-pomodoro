@@ -11,6 +11,7 @@ import {
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import "./Menu.css";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 interface MenuProps extends RouteComponentProps {
   selectedPage: string;
@@ -33,12 +34,15 @@ const appPages: AppPage[] = [
 ];
 
 const Menu: React.FunctionComponent<MenuProps> = ({ selectedPage }) => {
+  const { user, setUser } = useAuthentication();
+
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
+        <h1 className="p-title">みんなでポモドーロ</h1>
         <IonList id="inbox-list">
           <IonListHeader>uid</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
+          <IonNote>{user ? user.uid : ""}</IonNote>
           <IonListHeader>channel</IonListHeader>
           {appPages.map((appPage, index) => {
             return (

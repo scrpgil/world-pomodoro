@@ -3,7 +3,7 @@ import {
   IonHeader,
   IonPage,
   IonButtons,
-  IonTextarea,
+  IonMenuButton,
   IonTitle,
   IonButton,
   IonIcon,
@@ -30,7 +30,10 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="p-toolbar">
-          <IonTitle>みんなでポモドーロ</IonTitle>
+          <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
+          <IonTitle>#general</IonTitle>
           <IonButtons slot="end">
             <PomodoroTimer
               time={pomodoroTimer.time}
@@ -41,9 +44,7 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent />
       <IonFooter className="ion-no-border">
-        <div
-          className={text != "" ? "p-textarea active" : "p-textarea"}
-        >
+        <div className={text != "" ? "p-textarea active" : "p-textarea"}>
           <TextareaAutosize
             placeholder="メッセージを書く"
             value={text}
