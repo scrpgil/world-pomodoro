@@ -12,27 +12,34 @@ import {
   IonToolbar
 } from "@ionic/react";
 import React, { useRef, useState, useContext, useEffect } from "react";
+import { RouteComponentProps } from "react-router";
 import "./Home.css";
-import { send } from "ionicons/icons";
+import { send, shareSocialOutline } from "ionicons/icons";
 import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { useChats } from "../hooks/useChats";
 import PomodoroTimer from "../components/PomodoroTimer";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
+import { navigatorShare } from "../utils/utils";
 
 declare module "react-textarea-autosize";
-const Home: React.FC = () => {
+const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const { pomodoroTimer } = usePomodoroTimer();
   const content = useRef(null);
   const [text, setText] = useState<string>("");
   const [rendered, setRendered] = useState<boolean>(false);
+  const [firstLoading, setFirstLoading] = useState<boolean>(false);
   const { currentUser } = useContext(AuthContext);
-  const { currentChannel } = useContext(ChannelContext);
+  const { currentChannel, setCurrentChannel } = useContext(ChannelContext);
 
-  const [currentChat, sendMessage, currentChatMessages, createChat] = useChats(
-    currentChannel
-  );
+  const [
+    currentChat,
+    sendMessage,
+    currentChatMessages,
+    createChat,
+    moreReadTalks
+  ] = useChats(currentChannel);
 
   const handleChange = (event: any) => {
     setText(event.target.value);
@@ -59,15 +66,34 @@ const Home: React.FC = () => {
       sendTalk();
     }
   };
+  const share = () => {
+    navigatorShare(currentChat.title);
+  };
+  const handleScroll = (ev: any) => {
+    if (!rendered) return;
+    if (
+      ev.detail.scrollTop == 0 &&
+      currentChatMessages &&
+      currentChatMessages.length > 0
+    ) {
+      moreReadTalks(currentChatMessages[0]);
+    }
+  };
+
   useEffect(
     () => {
-      if (!rendered) return;
+      console.log(firstLoading);
+      if (!rendered || firstLoading) return;
       scrollToTheBottom(0);
+      setFirstLoading(true);
     },
     [currentChatMessages]
   );
   useIonViewDidEnter(() => {
     setRendered(true);
+    if (match.params && match.params.id) {
+      setCurrentChannel(match.params.id);
+    }
   });
   return (
     <IonPage>
@@ -77,8 +103,19 @@ const Home: React.FC = () => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>
-            {currentChat ? currentChat.title : ""}
-            <span>#{currentChannel}</span>
+            <div className="title-wrapper">
+              <div className="title-main-wrapper">
+                <div>{currentChat ? currentChat.title : ""}</div>
+                <div className="title-id">#{currentChannel}</div>
+              </div>
+              <IonButton fill="clear" size="small" onClick={() => share()}>
+                <IonIcon
+                  color="dark"
+                  slot="icon-only"
+                  icon={shareSocialOutline}
+                />
+              </IonButton>
+            </div>
           </IonTitle>
           <IonButtons slot="end">
             <PomodoroTimer
@@ -88,7 +125,13 @@ const Home: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent scrollEvents={true} ref={content}>
+      <IonContent
+        scrollEvents={true}
+        onIonScroll={ev => {
+          handleScroll(ev);
+        }}
+        ref={content}
+      >
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((message: any, index: number) => (

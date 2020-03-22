@@ -36,11 +36,14 @@ const App: React.FC = () => {
               <IonSplitPane contentId="main">
                 <Menu />
                 <IonRouterOutlet id="main">
-                  <Route path="/home" component={Home} exact={true} />
+                  <Route path="/" component={Home} exact={true} />
                   <Route
-                    exact
-                    path="/"
-                    render={() => <Redirect to="/home" />}
+                    path="/:id"
+                    exact={true}
+                    render={props => {
+                      console.log(props.match.params.id);
+                      return <Home {...props} />;
+                    }}
                   />
                 </IonRouterOutlet>
               </IonSplitPane>

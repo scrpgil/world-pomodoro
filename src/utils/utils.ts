@@ -1,3 +1,4 @@
+import copy from "copy-text-to-clipboard";
 export const convDateFormat = (timeStamp: any) => {
   let dt = new Date();
   if (timeStamp) {
@@ -15,4 +16,27 @@ export const convDateFormat = (timeStamp: any) => {
   // "." +
   // msecond;
   return result;
+};
+
+export const copyCommand = (text: any) => {
+  copy(text);
+};
+
+export const navigatorShare = (title: string) => {
+  let navigator: any = window.navigator;
+  if (navigator && navigator.share) {
+    navigator
+      .share({
+        url: window.location.href,
+        title: title + " | みんなでポモドーロ",
+        text: ""
+      })
+      .then(() => console.log("Successful share"))
+      .catch((error: any) => {
+        console.log("Error sharing", error);
+        copyCommand(window.location.href);
+      });
+  } else {
+    copyCommand(window.location.href);
+  }
 };

@@ -1,9 +1,9 @@
 import React, {
   createContext,
-  useReducer,
   Dispatch,
   SetStateAction,
-  useState
+  useState, 
+  useEffect
 } from "react";
 
 type ContextValue = {
@@ -23,6 +23,12 @@ const ChannelProvider = (props: any) => {
   // Contextに持たせるcurrentUserは内部的にはuseStateで管理
   const [currentChannel, setCurrentChannel] = useState<string>("general");
 
+  useEffect(
+    () => {
+      window.history.pushState("", "", currentChannel);
+    },
+    [currentChannel]
+  );
   return (
     <ChannelContext.Provider
       value={{

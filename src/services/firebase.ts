@@ -30,7 +30,19 @@ export const getChatRoom = (chatRoomId: string) => {
 };
 
 export const getTalks = (chatRoomId: string) => {
-  return db.collection(`chat_rooms/${chatRoomId}/talks`).orderBy("created_at");
+  return db
+    .collection(`chat_rooms/${chatRoomId}/talks`)
+    .orderBy("created_at", "desc")
+    .limit(10);
+};
+
+export const getTalksAt = (chatRoomId: string, start: any) => {
+  return db
+    .collection(`chat_rooms/${chatRoomId}/talks`)
+    .orderBy("created_at", "desc")
+    .startAt(start)
+    .limit(11)
+    .get();
 };
 
 export const addTalks = (chatRoomId: string, userId: string, body: string) => {

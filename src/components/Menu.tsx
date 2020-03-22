@@ -9,7 +9,7 @@ import {
   IonMenuToggle,
   IonNote
 } from "@ionic/react";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import "./Menu.css";
 import { AuthContext } from "../context/Auth";
@@ -26,12 +26,12 @@ const appPages: AppPage[] = [
   {
     title: "general",
     id: "general",
-    url: "/home"
+    url: "/general"
   },
   {
     title: "random",
     id: "random",
-    url: "/home"
+    url: "/random"
   }
 ];
 
@@ -46,10 +46,35 @@ const Menu: React.FunctionComponent = () => {
   const changeChannel = (channel: string) => {
     setCurrentChannel(channel);
   };
-  const addChannel = () => {
-    console.log("addChannel");
+  const addChannelAlert = () => {
     setShowAddChatRoomAlert(true);
   };
+  const addChannel = (title: string) => {
+    createChat(title).then((doc: { title: string; id: string }) => {
+      if (doc) {
+        changeChannel(doc.id);
+      }
+    });
+  };
+  const addAppPage = (chat: any) => {
+    if (!chat) {
+      return;
+    }
+    let flag = false;
+    for (let page of appPages) {
+      if (page.id == chat.id) {
+        flag = true;
+      }
+    }
+    if (!flag) {
+      appPages.push({
+        title: chat.title,
+        id: chat.id,
+        url: "/home"
+      });
+    }
+  };
+  addAppPage(currentChat);
 
   return (
     <IonMenu contentId="main" type="overlay">
@@ -81,7 +106,7 @@ const Menu: React.FunctionComponent = () => {
           <IonItem
             button
             className="p-menu-add-chat"
-            onClick={() => addChannel()}
+            onClick={() => addChannelAlert()}
             lines="none"
             detail={false}
           >
@@ -111,19 +136,7 @@ const Menu: React.FunctionComponent = () => {
             {
               text: "Ok",
               handler: data => {
-                console.log("Confirm Ok", data);
-                createChat(data.title).then(
-                  (doc: { title: string; id: string }) => {
-                    if (doc) {
-                      changeChannel(doc.id);
-                      appPages.push({
-                        title: doc.title,
-                        id: doc.id,
-                        url: "/home"
-                      });
-                    }
-                  }
-                );
+                addChannel(data.title);
               }
             }
           ]}

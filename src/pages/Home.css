@@ -1,7 +1,11 @@
 ion-content ion-toolbar {
   --background: translucent;
 }
-ion-title span {
+ion-title .title-wrapper {
+  display: flex;
+  align-items: center;
+}
+ion-title .title-id {
   color: #99999c;
   font-size: 12px;
   margin-left: 4px;
