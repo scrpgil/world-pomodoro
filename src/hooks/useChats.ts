@@ -45,7 +45,7 @@ export function useChats(channelId: string) {
   const sendMessage = (chatName: string, body: string) => {
     addTalks(channelId, chatName, body);
   };
-  const moreReadTalks = (talk: any) => {
+  const moreReadTalks = (talk: any, resolve: any) => {
     if (loading || !lastTalk) return;
     loading = true;
     getTalksAt(channelId, lastTalk).then(snapshot => {
@@ -66,6 +66,7 @@ export function useChats(channelId: string) {
       const more = talks.concat(currentChatMessages);
       setCurrentChatMessages(more);
       loading = false;
+      resolve()
     });
   };
   const createChat = (chatName: string) => {

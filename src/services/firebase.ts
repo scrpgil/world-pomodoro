@@ -33,7 +33,7 @@ export const getTalks = (chatRoomId: string) => {
   return db
     .collection(`chat_rooms/${chatRoomId}/talks`)
     .orderBy("created_at", "desc")
-    .limit(10);
+    .limit(100);
 };
 
 export const getTalksAt = (chatRoomId: string, start: any) => {

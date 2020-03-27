@@ -26,7 +26,7 @@ import { navigatorShare } from "../utils/utils";
 declare module "react-textarea-autosize";
 const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const { pomodoroTimer } = usePomodoroTimer();
-  const content = useRef(null);
+  const content: any = useRef(null);
   const [text, setText] = useState<string>("");
   const [rendered, setRendered] = useState<boolean>(false);
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
@@ -69,15 +69,32 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const share = () => {
     navigatorShare(currentChat.title);
   };
-  const handleScroll = (ev: any) => {
-    if (!rendered) return;
-    if (
-      ev.detail.scrollTop == 0 &&
-      currentChatMessages &&
-      currentChatMessages.length > 0
-    ) {
-      moreReadTalks(currentChatMessages[0]);
-    }
+  const handleScroll = async (ev: any) => {
+    // FIXME: 無限スクロールがくるまで待ち
+    // if (!rendered) return;
+    // if (
+    //   ev.detail.scrollTop == 0 &&
+    //   currentChatMessages &&
+    //   currentChatMessages.length > 0
+    // ) {
+    //   const pr = new Promise(resolve => {
+    //     moreReadTalks(currentChatMessages[0], resolve);
+    //   });
+    //   pr.then(async () => {
+    //     let scrollEl = await content.current.getScrollElement();
+    //     let isBusy = true;
+    //     const prev = scrollEl.scrollHeight - scrollEl.scrollTop;
+    //     requestAnimationFrame(() => {
+    //       const scrollHeight = scrollEl.scrollHeight;
+    //       const newScrollTop = scrollHeight - prev;
+    //       console.log(newScrollTop);
+    //       requestAnimationFrame(() => {
+    //         console.log(newScrollTop);
+    //         isBusy = false;
+    //       });
+    //     });
+    //   });
+    // }
   };
 
   useEffect(
