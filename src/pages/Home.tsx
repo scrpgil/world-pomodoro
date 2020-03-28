@@ -9,7 +9,8 @@ import {
   IonIcon,
   IonFooter,
   useIonViewDidEnter,
-  IonToolbar
+  IonToolbar,
+  IonToast
 } from "@ionic/react";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
@@ -21,25 +22,29 @@ import { useChats } from "../hooks/useChats";
 import PomodoroTimer from "../components/PomodoroTimer";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
-import { navigatorShare } from "../utils/utils";
+import { navigatorShare, playAudio } from "../utils/utils";
 
 declare module "react-textarea-autosize";
 const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
-  const { pomodoroTimer } = usePomodoroTimer();
-  const content: any = useRef(null);
-  const [text, setText] = useState<string>("");
+  // useState
   const [rendered, setRendered] = useState<boolean>(false);
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [text, setText] = useState<string>("");
+
+  // useContext
   const { currentUser } = useContext(AuthContext);
   const { currentChannel, setCurrentChannel } = useContext(ChannelContext);
 
-  const [
-    currentChat,
-    sendMessage,
-    currentChatMessages,
-    createChat,
-    moreReadTalks
-  ] = useChats(currentChannel);
+  // useRef
+  const content: any = useRef(null);
+  const tinAudio: any = useRef(null);
+
+  // hooks
+  const { pomodoroTimer } = usePomodoroTimer();
+  const [currentChat, sendMessage, currentChatMessages] = useChats(
+    currentChannel
+  );
 
   const handleChange = (event: any) => {
     setText(event.target.value);
@@ -66,8 +71,11 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
       sendTalk();
     }
   };
-  const share = () => {
-    navigatorShare(currentChat.title);
+  const share = async () => {
+    const flag = await navigatorShare(currentChat.title);
+    if (!flag) {
+      setShowSuccessToast(true);
+    }
   };
   const handleScroll = async (ev: any) => {
     // FIXME: 無限スクロールがくるまで待ち
@@ -106,6 +114,15 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
     },
     [currentChatMessages]
   );
+  useEffect(
+    () => {
+      if (pomodoroTimer.isSound) {
+        // tinAudio.current.play();
+      }
+    },
+    [pomodoroTimer]
+  );
+
   useIonViewDidEnter(() => {
     setRendered(true);
     if (match.params && match.params.id) {
@@ -149,6 +166,16 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         }}
         ref={content}
       >
+        <audio preload="auto" ref={tinAudio}>
+          <source src="assets/audio/tin.ogg" type="audio/ogg" />
+        </audio>
+        <IonToast
+          isOpen={showSuccessToast}
+          onDidDismiss={() => setShowSuccessToast(false)}
+          message="URLをコピーしました"
+          position="top"
+          duration={200}
+        />
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((message: any, index: number) => (

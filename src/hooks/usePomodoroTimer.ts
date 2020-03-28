@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 export interface PomodoroTimer {
   time: string;
   breakTime: boolean;
+  isSound: boolean;
 }
 export function usePomodoroTimer() {
   const calcPomodoroTimer = () => {
@@ -21,10 +22,11 @@ export function usePomodoroTimer() {
     let second = Math.abs(59 - now.getSeconds());
     return {
       time: ("0" + minute).slice(-2) + ":" + ("0" + second).slice(-2),
-      breakTime: breakTime
+      breakTime: breakTime,
+      isSound: false
     };
   };
-  const pushNotiaction = (text: string, breakTime: boolean) => {
+  const pushNotiaction = (breakTime: boolean) => {
     if (window.Notification && Notification.permission === "granted") {
       var title = "";
       var body = "";
@@ -62,7 +64,8 @@ export function usePomodoroTimer() {
         let breakTimeText: string = getBreakTimeText(pTimer.breakTime);
         if (pTimer.breakTime !== beforeBreakTimeStatus) {
           beforeBreakTimeStatus = pTimer.breakTime;
-          pushNotiaction(breakTimeText, beforeBreakTimeStatus);
+          pushNotiaction(beforeBreakTimeStatus);
+          pTimer.isSound = true;
         }
         document.title =
           pTimer.time + " " + breakTimeText + " みんなでポモドーロ";

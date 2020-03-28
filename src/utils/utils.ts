@@ -22,21 +22,49 @@ export const copyCommand = (text: any) => {
   copy(text);
 };
 
-export const navigatorShare = (title: string) => {
-  let navigator: any = window.navigator;
-  if (navigator && navigator.share) {
-    navigator
-      .share({
-        url: window.location.href,
-        title: title + " | みんなでポモドーロ",
-        text: ""
-      })
-      .then(() => console.log("Successful share"))
-      .catch((error: any) => {
-        console.log("Error sharing", error);
-        copyCommand(window.location.href);
-      });
-  } else {
-    copyCommand(window.location.href);
+export const navigatorShare = async (title: string): Promise<boolean> => {
+  return new Promise(async resolve => {
+    let navigator: any = window.navigator;
+    if (navigator && navigator.share) {
+      await navigator
+        .share({
+          url: window.location.href,
+          title: title + " | みんなでポモドーロ",
+          text: ""
+        })
+        .then(() => {
+          resolve(true);
+        })
+        .catch((error: any) => {
+          console.log("Error sharing", error);
+          copyCommand(window.location.href);
+          resolve(false);
+        });
+    } else {
+      copyCommand(window.location.href);
+      resolve(false);
+    }
+  });
+};
+
+export const pushNotiaction = (title: string, options: any = {}) => {
+  if (window.Notification && Notification.permission === "granted") {
+    new Notification(title, options);
+  }
+};
+
+export const playAudio = (src: string) => {
+  try {
+    var music = new Audio();
+    music.preload = "auto";
+    music.src = src;
+    music.load();
+
+    music.addEventListener("ended", () => {
+      music.currentTime = 0;
+      music.play();
+    });
+  } catch (e) {
+    console.log(e);
   }
 };
