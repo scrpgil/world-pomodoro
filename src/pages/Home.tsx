@@ -33,7 +33,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const [text, setText] = useState<string>("");
 
   // useContext
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, currentUserRef } = useContext(AuthContext);
   const { currentChannel, setCurrentChannel } = useContext(ChannelContext);
 
   // useRef
@@ -60,7 +60,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   };
   const sendTalk = () => {
     if (text != "" && currentUser) {
-      sendMessage(currentUser.uid, text);
+      sendMessage(currentUserRef, text);
       setText("");
       scrollToTheBottom(400);
     }

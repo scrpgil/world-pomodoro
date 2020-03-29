@@ -42,8 +42,8 @@ export function useChats(channelId: string) {
     },
     [channelId]
   );
-  const sendMessage = (chatName: string, body: string) => {
-    addTalks(channelId, chatName, body);
+  const sendMessage = (ref: any, body: string) => {
+    addTalks(channelId, ref, body);
   };
   const moreReadTalks = (talk: any, resolve: any) => {
     if (loading || !lastTalk) return;
@@ -66,7 +66,7 @@ export function useChats(channelId: string) {
       const more = talks.concat(currentChatMessages);
       setCurrentChatMessages(more);
       loading = false;
-      resolve()
+      resolve();
     });
   };
   const createChat = (chatName: string) => {

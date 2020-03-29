@@ -1,15 +1,23 @@
-import { User } from "firebase";
+import { User, firestore } from "firebase";
 import React, { createContext, useEffect, useState } from "react";
+import auth, {
+  authenticateAnonymously,
+  getUserRef
+} from "../services/firebase";
 
-import auth, { authenticateAnonymously } from "../services/firebase";
+type DocumentReference = firestore.DocumentReference;
 
 // Contextの型を用意
 interface IAuthContext {
   currentUser: User | null | undefined;
+  currentUserRef: DocumentReference | null | undefined;
 }
 
 // Contextを宣言。Contextの中身を {currentUser: undefined} と定義
-const AuthContext = createContext<IAuthContext>({ currentUser: undefined });
+const AuthContext = createContext<IAuthContext>({
+  currentUser: undefined,
+  currentUserRef: undefined
+});
 
 authenticateAnonymously();
 const AuthProvider = (props: any) => {
@@ -17,18 +25,26 @@ const AuthProvider = (props: any) => {
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(
     undefined
   );
+  const [currentUserRef, setCurrentUserRef] = useState<
+    DocumentReference | null | undefined
+  >(undefined);
 
   useEffect(() => {
     // Firebase Authのメソッド。ログイン状態が変化すると呼び出される
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async (user: any) => {
       setCurrentUser(user);
+      if (user && user.uid) {
+        const userRef: any = await getUserRef(user.uid);
+        setCurrentUserRef(userRef);
+      }
     });
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        currentUser: currentUser
+        currentUser: currentUser,
+        currentUserRef: currentUserRef
       }}
     >
       {props.children}

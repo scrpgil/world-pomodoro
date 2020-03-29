@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+type DocumentReference = firebase.firestore.DocumentReference;
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgxbo1RIsD4G99GuuPxcfilOQu37n3amQ",
@@ -20,6 +21,10 @@ export default auth;
 
 export const authenticateAnonymously = () => {
   return firebase.auth().signInAnonymously();
+};
+
+export const getUserRef = (userId: string) => {
+  return db.collection(`users`).doc(userId);
 };
 
 export const getChatRoom = (chatRoomId: string) => {
@@ -45,10 +50,15 @@ export const getTalksAt = (chatRoomId: string, start: any) => {
     .get();
 };
 
-export const addTalks = (chatRoomId: string, userId: string, body: string) => {
+export const addTalks = (
+  chatRoomId: string,
+  userRef: DocumentReference,
+  body: string
+) => {
+  console.log(chatRoomId, userRef, body);
   return db.collection(`chat_rooms/${chatRoomId}/talks`).add({
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
-    uid: userId,
+    user: { ref: userRef },
     body: body
   });
 };
