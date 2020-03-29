@@ -50,7 +50,7 @@ export const getTalksAt = (chatRoomId: string, start: any) => {
     .get();
 };
 
-export const addTalks = (
+export const addTalk = (
   chatRoomId: string,
   userRef: DocumentReference,
   body: string
@@ -58,6 +58,7 @@ export const addTalks = (
   console.log(chatRoomId, userRef, body);
   return db.collection(`chat_rooms/${chatRoomId}/talks`).add({
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    uid: userRef.id,
     user: { ref: userRef },
     body: body
   });

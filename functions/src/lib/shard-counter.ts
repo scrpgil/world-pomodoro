@@ -1,17 +1,13 @@
 import * as admin from "firebase-admin";
 
-export const createCounter = async (
-  db: any,
-  ref: any,
-  num_shards: number
-) => {
+export const createCounter = async (db: any, ref: any, numShards: number) => {
   var batch = db.batch();
 
   // Initialize the counter document
-  batch.update(ref, { num_shards: num_shards });
+  batch.update(ref, { numShards: numShards });
 
   // Initialize each shard with count=0
-  for (let i = 0; i < num_shards; i++) {
+  for (let i = 0; i < numShards; i++) {
     let shardRef = ref.collection("shards").doc(i.toString());
     batch.set(shardRef, { count: 0 });
   }
@@ -20,9 +16,9 @@ export const createCounter = async (
   return batch.commit();
 };
 
-export const incrementCounter = async (ref: any, num_shards: number) => {
+export const incrementCounter = async (ref: any, numShards: number) => {
   // Select a shard of the counter at random
-  const shard_id = Math.floor(Math.random() * num_shards).toString();
+  const shard_id = Math.floor(Math.random() * numShards).toString();
   const shard_ref = ref.collection("shards").doc(shard_id);
 
   // Update count

@@ -6,8 +6,23 @@ export const createUserTable = async (db: any, user: any) => {
       .doc(user.uid)
       .set({
         name: user.displayName,
-        icon: user.photoURL,
         status: 0,
+        created: user.metadata.creationTime
+      })
+      .then(async (docRef: any) => {
+        console.log("Document written with ID: ", docRef.id);
+        return docRef.id;
+      })
+      .catch(async (error: any) => {
+        console.error("Error adding document: ", error);
+        return "";
+      });
+    key = await db
+      .collection("public-profiles")
+      .doc(user.uid)
+      .set({
+        displayName: user.displayName,
+        icon: user.photoURL,
         created: user.metadata.creationTime
       })
       .then(async (docRef: any) => {

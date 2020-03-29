@@ -55,10 +55,26 @@ ion-title .title-id {
 .talk-wrapper .talk-header {
   color: #99999c;
   padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+.talk-wrapper .talk-header .menu-button-wrapper {
+  visibility: hidden;
+  margin-left: auto;
+}
+.talk-wrapper .talk-header .menu-button-wrapper .menu-button {
+  --padding-top: 0px;
+  --padding-bottom: 0px;
 }
 .talk-wrapper .talk-body {
   font-family: "aahub";
   padding-bottom: 12px;
   white-space: pre;
   user-select: auto;
+}
+.talk-wrapper:hover {
+  background-color: var(--ion-item-background);
+}
+.talk-wrapper:hover .talk-header .menu-button-wrapper{
+  visibility: visible;
 }

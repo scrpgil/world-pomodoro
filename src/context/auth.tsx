@@ -1,11 +1,10 @@
-import { User, firestore } from "firebase";
+import { User } from "firebase";
 import React, { createContext, useEffect, useState } from "react";
 import auth, {
   authenticateAnonymously,
   getUserRef
 } from "../services/firebase";
-
-type DocumentReference = firestore.DocumentReference;
+import { DocumentReference } from "../interfaces/firebase";
 
 // Contextの型を用意
 interface IAuthContext {

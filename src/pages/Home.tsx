@@ -10,27 +10,29 @@ import {
   IonFooter,
   useIonViewDidEnter,
   IonToolbar,
+  IonActionSheet,
   IonToast
 } from "@ionic/react";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import "./Home.css";
-import { send, shareSocialOutline } from "ionicons/icons";
+import { send, shareSocialOutline, ellipsisHorizontal } from "ionicons/icons";
 import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { useChats } from "../hooks/useChats";
 import PomodoroTimer from "../components/PomodoroTimer";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
-import { navigatorShare, playAudio } from "../utils/utils";
+import { navigatorShare } from "../utils/utils";
 
 declare module "react-textarea-autosize";
 const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   // useState
   const [rendered, setRendered] = useState<boolean>(false);
+  const [text, setText] = useState<string>("");
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [text, setText] = useState<string>("");
+  const [showActionSheet, setShowActionSheet] = useState(false);
 
   // useContext
   const { currentUser, currentUserRef } = useContext(AuthContext);
@@ -176,12 +178,54 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
           position="top"
           duration={200}
         />
+        <IonActionSheet
+          isOpen={showActionSheet}
+          onDidDismiss={() => setShowActionSheet(false)}
+          buttons={[
+            {
+              text: "編集",
+              handler: () => {
+                console.log("Edit clicked");
+              }
+            },
+            {
+              text: "削除",
+              role: "destructive",
+              handler: () => {
+                console.log("Delete clicked");
+              }
+            },
+            {
+              text: "キャンセル",
+              role: "cancel",
+              handler: () => {
+                console.log("Cancel clicked");
+              }
+            }
+          ]}
+        />
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((message: any, index: number) => (
               <div className="talk-wrapper" key={index}>
                 <div className="talk-header">
-                  id: {message.uid} : {message.display_created_at}
+                  <div className="info">
+                    id: {message.uid} : {message.display_created_at}
+                  </div>
+                  <div className="menu-button-wrapper">
+                    <IonButton
+                      className="menu-button"
+                      fill="clear"
+                      size="small"
+                      onClick={() => setShowActionSheet(true)}
+                    >
+                      <IonIcon
+                        color="medium"
+                        slot="icon-only"
+                        icon={ellipsisHorizontal}
+                      />
+                    </IonButton>
+                  </div>
                 </div>
                 <div className="talk-body">{message.body}</div>
               </div>

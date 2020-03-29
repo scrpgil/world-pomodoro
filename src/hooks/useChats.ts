@@ -4,7 +4,7 @@ import {
   getChatRoom,
   getTalks,
   getTalksAt,
-  addTalks
+  addTalk
 } from "../services/firebase";
 import { convDateFormat } from "../utils/utils";
 
@@ -43,7 +43,10 @@ export function useChats(channelId: string) {
     [channelId]
   );
   const sendMessage = (ref: any, body: string) => {
-    addTalks(channelId, ref, body);
+    addTalk(channelId, ref, body);
+  };
+  const editMessage = (ref: any, body: string) => {
+    // editTalk(channelId, ref, body);
   };
   const moreReadTalks = (talk: any, resolve: any) => {
     if (loading || !lastTalk) return;
