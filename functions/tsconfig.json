@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@interfaces/*": ["../../src/interfaces/*"]
+    },
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -9,7 +12,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -22,7 +22,7 @@ export const createCounter = async (
 };
 
 export const incrementCounter = async (
-  ref: DocumentReference,
+  ref: any,
   numShards: number
 ) => {
   // Select a shard of the counter at random
@@ -33,7 +33,7 @@ export const incrementCounter = async (
   return shard_ref.update("count", admin.firestore.FieldValue.increment(1));
 };
 
-export const getCount = (ref: DocumentReference) => {
+export const getCount = async (ref: DocumentReference): Promise<number> => {
   // Sum the count of each shard in the subcollection
   return ref
     .collection("shards")

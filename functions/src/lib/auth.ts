@@ -1,3 +1,4 @@
+
 export const createUserTable = async (db: any, user: any) => {
   let key = "";
   try {
