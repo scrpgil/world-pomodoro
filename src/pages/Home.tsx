@@ -198,12 +198,6 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
           onDidDismiss={() => setShowActionSheet(false)}
           buttons={[
             {
-              text: "編集",
-              handler: () => {
-                console.log("Edit clicked");
-              }
-            },
-            {
               text: "削除",
               role: "destructive",
               handler: () => {
@@ -223,7 +217,14 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((message: any, index: number) => (
-              <div className={`talk-wrapper ${message.status == StatusList.Delete ? "talk-delete-wrapper": ""}`} key={index}>
+              <div
+                className={`talk-wrapper ${
+                  message.status == StatusList.Delete
+                    ? "talk-delete-wrapper"
+                    : ""
+                }`}
+                key={index}
+              >
                 <div className="talk-header">
                   <div className="info">
                     {message.num}: {message.uid} : {message.displayCreatedAt}
