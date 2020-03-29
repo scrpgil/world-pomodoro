@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "paths": {
-      "@interfaces/*": ["../../src/interfaces/*"]
-    },
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,

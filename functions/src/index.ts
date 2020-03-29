@@ -25,3 +25,11 @@ exports.incrementCounter = functions.firestore
     await incrementCounter(snap.ref.parent.parent, SHARD_NUM);
     return 0;
   });
+
+exports.incrementCounter = functions.firestore
+  .document("chat_rooms/{chatRoomId}/talks/{talkId}")
+  .onUpdate(async (change, context) => {
+    console.log(change.before.id, change.before.data());
+    console.log(change.after.id, change.after.data());
+    return 0;
+  });

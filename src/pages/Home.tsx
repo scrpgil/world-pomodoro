@@ -24,6 +24,7 @@ import PomodoroTimer from "../components/PomodoroTimer";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
 import { navigatorShare } from "../utils/utils";
+import { StatusList } from "../interfaces/talk";
 
 declare module "react-textarea-autosize";
 const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
@@ -222,7 +223,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((message: any, index: number) => (
-              <div className="talk-wrapper" key={index}>
+              <div className={`talk-wrapper ${message.status == StatusList.Delete ? "talk-delete-wrapper": ""}`} key={index}>
                 <div className="talk-header">
                   <div className="info">
                     {message.num}: {message.uid} : {message.displayCreatedAt}

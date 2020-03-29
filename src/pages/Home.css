@@ -52,6 +52,9 @@ ion-title .title-id {
   border-bottom: 1px solid #5b5b5b;
   padding: 12px;
 }
+.talk-delete-wrapper {
+  color: #99999c;
+}
 .talk-wrapper .talk-header {
   color: #99999c;
   padding-bottom: 12px;
