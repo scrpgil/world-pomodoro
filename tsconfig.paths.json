@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@pages/*": ["./pages/*"],
+      "@components/*": ["./components/*"],
+      "@services/*": ["./services/*"],
+      "@interfaces/*": ["./interfaces/*"],
+      "@hooks/*": ["./hooks/*"],
+      "@utils/*": ["./app/utils/*"]
+    }
+  }
+}
