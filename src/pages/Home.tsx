@@ -33,6 +33,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showActionSheet, setShowActionSheet] = useState(false);
+  const [currentTalk, setCurrentTalk] = useState();
 
   // useContext
   const { currentUser, currentUserRef } = useContext(AuthContext);
@@ -44,10 +45,16 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
 
   // hooks
   const { pomodoroTimer } = usePomodoroTimer();
-  const [currentChat, sendMessage, currentChatMessages] = useChats(
-    currentChannel
-  );
+  const [
+    currentChat,
+    sendMessage,
+    currentChatMessages,
+    createChat,
+    moreReadTalks,
+    deleteMessage
+  ] = useChats(currentChannel);
 
+  // functions
   const handleChange = (event: any) => {
     setText(event.target.value);
   };
@@ -79,6 +86,31 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
       setShowSuccessToast(true);
     }
   };
+  const onShowActionSheet = (talk: any) => {
+    setCurrentTalk(talk);
+    setShowActionSheet(true);
+  };
+
+  // UseEffect
+  useEffect(
+    () => {
+      console.log(firstLoading);
+      if (!rendered || firstLoading) return;
+      scrollToTheBottom(0);
+      setFirstLoading(true);
+    },
+    [currentChatMessages]
+  );
+  useEffect(
+    () => {
+      if (pomodoroTimer.isSound) {
+        // tinAudio.current.play();
+      }
+    },
+    [pomodoroTimer]
+  );
+
+  // Ionic Hooks
   const handleScroll = async (ev: any) => {
     // FIXME: 無限スクロールがくるまで待ち
     // if (!rendered) return;
@@ -106,24 +138,6 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
     //   });
     // }
   };
-
-  useEffect(
-    () => {
-      console.log(firstLoading);
-      if (!rendered || firstLoading) return;
-      scrollToTheBottom(0);
-      setFirstLoading(true);
-    },
-    [currentChatMessages]
-  );
-  useEffect(
-    () => {
-      if (pomodoroTimer.isSound) {
-        // tinAudio.current.play();
-      }
-    },
-    [pomodoroTimer]
-  );
 
   useIonViewDidEnter(() => {
     setRendered(true);
@@ -192,6 +206,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
               text: "削除",
               role: "destructive",
               handler: () => {
+                deleteMessage(currentTalk);
                 console.log("Delete clicked");
               }
             },
@@ -210,14 +225,14 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
               <div className="talk-wrapper" key={index}>
                 <div className="talk-header">
                   <div className="info">
-                    id: {message.uid} : {message.displayCreatedAt}
+                    {message.num}: {message.uid} : {message.displayCreatedAt}
                   </div>
                   <div className="menu-button-wrapper">
                     <IonButton
                       className="menu-button"
                       fill="clear"
                       size="small"
-                      onClick={() => setShowActionSheet(true)}
+                      onClick={() => onShowActionSheet(message)}
                     >
                       <IonIcon
                         color="medium"

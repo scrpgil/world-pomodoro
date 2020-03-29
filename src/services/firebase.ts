@@ -1,7 +1,8 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
-type DocumentReference = firebase.firestore.DocumentReference;
+import { DocumentReference } from "../interfaces/firebase";
+import { ITalk, StatusList } from "../interfaces/talk";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgxbo1RIsD4G99GuuPxcfilOQu37n3amQ",
@@ -27,41 +28,60 @@ export const getUserRef = (userId: string) => {
   return db.collection(`users`).doc(userId);
 };
 
+export const getChatRoomRef = (chatRoomId: string) => {
+  return db.collection(`chat_rooms`).doc(chatRoomId);
+};
+
 export const getChatRoom = (chatRoomId: string) => {
-  return db
-    .collection(`chat_rooms`)
-    .doc(chatRoomId)
-    .get();
+  return getChatRoomRef(chatRoomId).get();
 };
 
 export const getTalks = (chatRoomId: string) => {
-  return db
-    .collection(`chat_rooms/${chatRoomId}/talks`)
-    .orderBy("created_at", "desc")
+  const ref = getChatRoomRef(chatRoomId);
+  return ref
+    .collection("talks")
+    .orderBy("createdAt", "desc")
     .limit(100);
 };
 
 export const getTalksAt = (chatRoomId: string, start: any) => {
   return db
     .collection(`chat_rooms/${chatRoomId}/talks`)
-    .orderBy("created_at", "desc")
+    .orderBy("createdAt", "desc")
     .startAt(start)
     .limit(11)
     .get();
 };
 
-export const addTalk = (
+export const getTalkRef = (chatRoomId: string, talkId: string) => {
+  const ref = getChatRoomRef(chatRoomId);
+  return ref.collection("talks").doc(talkId);
+};
+
+export const addTalk = async (
   chatRoomId: string,
   userRef: DocumentReference,
   body: string
 ) => {
-  console.log(chatRoomId, userRef, body);
-  return db.collection(`chat_rooms/${chatRoomId}/talks`).add({
-    created_at: firebase.firestore.FieldValue.serverTimestamp(),
+  const ref = getChatRoomRef(chatRoomId);
+  const totalCount = await getCount(ref);
+  console.log(ref);
+  return ref.collection("talks").add({
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     uid: userRef.id,
+    num: totalCount + 1,
+    status: StatusList.Normal,
     user: { ref: userRef },
     body: body
   });
+};
+
+export const putTalk = (chatRoomId: string, talk: ITalk) => {
+  console.log(talk);
+  if (talk && talk.id) {
+    const ref = getTalkRef(chatRoomId, talk.id);
+    return ref.update(talk);
+  }
 };
 
 export const addChatRooms = (title: string) => {
@@ -71,5 +91,20 @@ export const addChatRooms = (title: string) => {
     .then(ref => {
       console.log("Added document with ID: ", ref.id);
       return ref.id;
+    });
+};
+
+export const getCount = async (ref: DocumentReference): Promise<number> => {
+  // Sum the count of each shard in the subcollection
+  return ref
+    .collection("shards")
+    .get()
+    .then((snapshot: any) => {
+      let total_count = 0;
+      snapshot.forEach((doc: any) => {
+        total_count += doc.data().count;
+      });
+
+      return total_count;
     });
 };

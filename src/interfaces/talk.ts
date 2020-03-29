@@ -1,11 +1,15 @@
 import { DocumentReference } from "./firebase";
+export enum StatusList {
+  Normal = 0,
+  Delete = 1
+}
 export interface ITalk {
-  id: string;
-  num: number;
-  status: number;
-  uid: string;
-  body: string;
-  displayCreatedAt: string;
-  createdAt: Date;
-  user: { ref: DocumentReference };
+  id?: string;
+  num?: number;
+  status?: StatusList;
+  uid?: string;
+  body?: string;
+  displayCreatedAt?: string;
+  createdAt?: Date;
+  user?: { ref: DocumentReference };
 }

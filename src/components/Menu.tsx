@@ -15,6 +15,7 @@ import "./Menu.css";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
 import { useChats } from "../hooks/useChats";
+import { IChatRoom } from "../interfaces/chat-room";
 
 interface AppPage {
   url: string;
@@ -50,7 +51,7 @@ const Menu: React.FunctionComponent = () => {
     setShowAddChatRoomAlert(true);
   };
   const addChannel = (title: string) => {
-    createChat(title).then((doc: { title: string; id: string }) => {
+    createChat(title).then((doc: IChatRoom) => {
       if (doc) {
         changeChannel(doc.id);
       }

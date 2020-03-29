@@ -4,14 +4,16 @@ import {
   getChatRoom,
   getTalks,
   getTalksAt,
-  addTalk
+  addTalk,
+  putTalk
 } from "../services/firebase";
 import { convDateFormat } from "../utils/utils";
-import { ITalk } from "../interfaces/talk";
+import { ITalk, StatusList } from "../interfaces/talk";
+import { IChatRoom } from "../interfaces/chat-room";
 
 export function useChats(channelId: string) {
   let loading = false;
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState<any>(null);
   const [currentChatMessages, setCurrentChatMessages] = useState<any>([]);
   const [lastTalk, setLastTalk] = useState<any>(null);
 
@@ -38,16 +40,25 @@ export function useChats(channelId: string) {
         }
         setLastTalk(snapshot.docs[snapshot.docs.length - 1]);
         talks.reverse();
+        console.log(talks);
         setCurrentChatMessages(talks);
       });
     },
     [channelId]
   );
-  const sendMessage = (ref: any, body: string) => {
-    addTalk(channelId, ref, body);
+  const sendMessage = (userRef: any, body: string) => {
+    if (currentChat) {
+      addTalk(currentChat.id, userRef, body);
+    }
   };
   const editMessage = (ref: any, body: string) => {
     // editTalk(channelId, ref, body);
+  };
+  const deleteMessage = (talk: ITalk) => {
+    if (talk) {
+      talk.status = StatusList.Delete;
+      putTalk(channelId, talk);
+    }
   };
   const moreReadTalks = (talk: any, resolve: any) => {
     if (loading || !lastTalk) return;
@@ -61,7 +72,7 @@ export function useChats(channelId: string) {
           const data = doc.data();
           data.id = doc.id;
           talks.push(data);
-          data.display_created_at = convDateFormat(data.created_at);
+          data.displayCreatedAt = convDateFormat(data.createdAt);
         });
       }
       talks.shift();
@@ -73,17 +84,19 @@ export function useChats(channelId: string) {
       resolve();
     });
   };
-  const createChat = (chatName: string) => {
+  const createChat = (chatName: string): Promise<IChatRoom> => {
     return new Promise(resolve => {
       getChatRoom(chatName).then(async doc => {
         if (doc.exists) {
           const data: any = doc.data();
           data.id = doc.id;
           setCurrentChat(data);
-          resolve({ title: data.title, id: data.id });
+          const chatRoom: IChatRoom = { title: data.title, id: data.id };
+          resolve(chatRoom);
         } else {
           const id = await addChatRooms(chatName);
-          resolve({ title: chatName, id: id });
+          const chatRoom: IChatRoom = { title: chatName, id: id };
+          resolve(chatRoom);
         }
       });
     });
@@ -94,6 +107,7 @@ export function useChats(channelId: string) {
     sendMessage,
     currentChatMessages,
     createChat,
-    moreReadTalks
+    moreReadTalks,
+    deleteMessage
   ];
 }
