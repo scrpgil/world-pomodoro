@@ -5,7 +5,7 @@
       "@components/*": ["./components/*"],
       "@services/*": ["./services/*"],
       "@interfaces/*": ["./interfaces/*"],
-      "@hooks/*": ["./hooks/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@utils/*": ["./app/utils/*"]
     }
   }

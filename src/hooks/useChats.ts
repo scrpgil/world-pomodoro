@@ -7,6 +7,7 @@ import {
   addTalk
 } from "../services/firebase";
 import { convDateFormat } from "../utils/utils";
+import { ITalk } from "../interfaces/talk";
 
 export function useChats(channelId: string) {
   let loading = false;
@@ -24,15 +25,15 @@ export function useChats(channelId: string) {
         }
       });
       getTalks(channelId).onSnapshot(snapshot => {
-        let talks: any = [];
+        let talks: ITalk[] = [];
         if (snapshot.empty) {
           console.log("No matching documents.");
         } else {
           snapshot.forEach(doc => {
-            const data = doc.data();
+            const data: any = doc.data();
             data.id = doc.id;
             talks.push(data);
-            data.display_created_at = convDateFormat(data.created_at);
+            data.displayCreatedAt = convDateFormat(data.createdAt);
           });
         }
         setLastTalk(snapshot.docs[snapshot.docs.length - 1]);

@@ -210,7 +210,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
               <div className="talk-wrapper" key={index}>
                 <div className="talk-header">
                   <div className="info">
-                    id: {message.uid} : {message.display_created_at}
+                    id: {message.uid} : {message.displayCreatedAt}
                   </div>
                   <div className="menu-button-wrapper">
                     <IonButton

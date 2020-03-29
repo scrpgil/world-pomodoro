@@ -1,6 +1,6 @@
 {
-  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
+    "baseUrl": "src",
     "target": "es5",
     "lib": [
       "dom",
@@ -20,6 +20,7 @@
     "noEmit": true,
     "jsx": "react"
   },
+  "extends": "./tsconfig.paths.json",
   "include": [
     "src"
   ]
