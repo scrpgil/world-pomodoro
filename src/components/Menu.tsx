@@ -9,7 +9,7 @@ import {
   IonMenuToggle,
   IonNote
 } from "@ionic/react";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import "./Menu.css";
 import { AuthContext } from "../context/Auth";
@@ -41,7 +41,7 @@ const Menu: React.FunctionComponent = () => {
   const { currentChannel, setCurrentChannel } = useContext(ChannelContext);
 
   const [showAddChatRoomAlert, setShowAddChatRoomAlert] = useState(false);
-  const [currentChat, sendMessage, currentChatMessages, createChat] = useChats(
+  const [currentChat, sendTalk, currentChatTallks, createChat] = useChats(
     currentChannel
   );
   const changeChannel = (channel: string) => {
@@ -63,7 +63,7 @@ const Menu: React.FunctionComponent = () => {
     }
     let flag = false;
     for (let page of appPages) {
-      if (page.id == chat.id) {
+      if (page.id === chat.id) {
         flag = true;
       }
     }

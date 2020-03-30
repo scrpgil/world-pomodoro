@@ -1,6 +1,6 @@
 import Menu from "./components/Menu";
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, IonSplitPane } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
@@ -41,7 +41,6 @@ const App: React.FC = () => {
                     path="/:id"
                     exact={true}
                     render={props => {
-                      console.log(props.match.params.id);
                       return <Home {...props} />;
                     }}
                   />

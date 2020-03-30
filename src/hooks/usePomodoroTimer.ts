@@ -6,6 +6,7 @@ export interface PomodoroTimer {
   isSound: boolean;
 }
 export function usePomodoroTimer() {
+  // functions
   const calcPomodoroTimer = () => {
     const now = new Date();
     let breakTime = true;
@@ -43,10 +44,6 @@ export function usePomodoroTimer() {
       new Notification(title, options);
     }
   };
-  const [pomodoroTimer, setPomodoroTimer] = useState<PomodoroTimer>(
-    calcPomodoroTimer()
-  );
-  let beforeBreakTimeStatus = false;
   const getBreakTimeText = (breakTime: boolean): string => {
     let breakTimeText = "";
     if (breakTime) {
@@ -57,13 +54,22 @@ export function usePomodoroTimer() {
     return breakTimeText;
   };
 
+  // useState
+  const [pomodoroTimer, setPomodoroTimer] = useState<PomodoroTimer>(
+    calcPomodoroTimer()
+  );
+  const [beforeBreakTimeStatus, setBeforeBreakTimeStatus] = useState<boolean>(
+    false
+  );
+
+  // useEffect
   useEffect(() => {
     const interval = setInterval(() => {
       setPomodoroTimer(() => {
         const pTimer = calcPomodoroTimer();
         let breakTimeText: string = getBreakTimeText(pTimer.breakTime);
         if (pTimer.breakTime !== beforeBreakTimeStatus) {
-          beforeBreakTimeStatus = pTimer.breakTime;
+          setBeforeBreakTimeStatus(pTimer.breakTime);
           pushNotiaction(beforeBreakTimeStatus);
           pTimer.isSound = true;
         }

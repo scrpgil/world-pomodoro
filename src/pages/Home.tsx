@@ -69,14 +69,14 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
     }, 200);
   };
   const sendTalk = () => {
-    if (text != "" && currentUser) {
+    if (text !== "" && currentUser) {
       sendMessage(currentUserRef, text);
       setText("");
       scrollToTheBottom(400);
     }
   };
   const onEnterPress = (e: any) => {
-    if (e.keyCode == 13 && e.shiftKey == true) {
+    if (e.keyCode === 13 && e.shiftKey === true) {
       e.preventDefault();
       sendTalk();
     }
@@ -100,7 +100,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
       scrollToTheBottom(0);
       setFirstLoading(true);
     },
-    [currentChatMessages]
+    [currentChatMessages, rendered, firstLoading]
   );
   useEffect(
     () => {
@@ -216,10 +216,10 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         />
         <div className="chat-room-wrapper">
           {currentChatMessages &&
-            currentChatMessages.map((message: any, index: number) => (
+          currentChatMessages.map((talk: any, index: number) => (
               <div
                 className={`talk-wrapper ${
-                  message.status == StatusList.Delete
+                  talk.status === StatusList.Delete
                     ? "talk-delete-wrapper"
                     : ""
                 }`}
@@ -227,14 +227,14 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
               >
                 <div className="talk-header">
                   <div className="info">
-                    {message.num}: {message.uid} : {message.displayCreatedAt}
+                    {talk.num}: {talk.uid} : {talk.displayCreatedAt}
                   </div>
                   <div className="menu-button-wrapper">
                     <IonButton
                       className="menu-button"
                       fill="clear"
                       size="small"
-                      onClick={() => onShowActionSheet(message)}
+                      onClick={() => onShowActionSheet(talk)}
                     >
                       <IonIcon
                         color="medium"
@@ -244,13 +244,13 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
                     </IonButton>
                   </div>
                 </div>
-                <div className="talk-body">{message.body}</div>
+                <div className="talk-body">{talk.body}</div>
               </div>
             ))}
         </div>
       </IonContent>
       <IonFooter className="ion-no-border">
-        <div className={text != "" ? "p-textarea active" : "p-textarea"}>
+        <div className={text !== "" ? "p-textarea active" : "p-textarea"}>
           <TextareaAutosize
             placeholder="メッセージを書く"
             value={text}

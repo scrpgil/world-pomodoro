@@ -14,7 +14,7 @@ import { IChatRoom } from "../interfaces/chat-room";
 export function useChats(channelId: string) {
   let loading = false;
   const [currentChat, setCurrentChat] = useState<any>(null);
-  const [currentChatMessages, setCurrentChatMessages] = useState<any>([]);
+  const [currentChatTalks, setCurrentChatTalks] = useState<any>([]);
   const [lastTalk, setLastTalk] = useState<any>(null);
 
   useEffect(
@@ -41,20 +41,20 @@ export function useChats(channelId: string) {
         setLastTalk(snapshot.docs[snapshot.docs.length - 1]);
         talks.reverse();
         console.log(talks);
-        setCurrentChatMessages(talks);
+        setCurrentChatTalks(talks);
       });
     },
     [channelId]
   );
-  const sendMessage = (userRef: any, body: string) => {
+  const sendTalk = (userRef: any, body: string) => {
     if (currentChat) {
       addTalk(currentChat.id, userRef, body);
     }
   };
-  const editMessage = (ref: any, body: string) => {
+  const editTalk = (ref: any, body: string) => {
     // editTalk(channelId, ref, body);
   };
-  const deleteMessage = (talk: ITalk) => {
+  const deleteTalk = (talk: ITalk) => {
     if (talk) {
       talk.status = StatusList.Delete;
       talk.body = "メッセージを削除";
@@ -79,8 +79,8 @@ export function useChats(channelId: string) {
       talks.shift();
       setLastTalk(snapshot.docs[snapshot.docs.length - 1]);
       talks.reverse();
-      const more = talks.concat(currentChatMessages);
-      setCurrentChatMessages(more);
+      const more = talks.concat(currentChatTalks);
+      setCurrentChatTalks(more);
       loading = false;
       resolve();
     });
@@ -105,10 +105,10 @@ export function useChats(channelId: string) {
 
   return [
     currentChat,
-    sendMessage,
-    currentChatMessages,
+    sendTalk,
+    currentChatTalks,
     createChat,
     moreReadTalks,
-    deleteMessage
+    deleteTalk
   ];
 }
