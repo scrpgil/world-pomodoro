@@ -57,7 +57,7 @@ export function useChats(channelId: string) {
   const deleteMessage = (talk: ITalk) => {
     if (talk) {
       talk.status = StatusList.Delete;
-      talk.body = "メッセージを削除しました";
+      talk.body = "メッセージを削除";
       putTalk(channelId, talk);
     }
   };
