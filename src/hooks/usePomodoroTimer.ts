@@ -79,7 +79,7 @@ export function usePomodoroTimer() {
       });
     }, 100);
     return () => clearInterval(interval);
-  }, []);
+  }, [beforeBreakTimeStatus]);
   return {
     pomodoroTimer,
     setPomodoroTimer,

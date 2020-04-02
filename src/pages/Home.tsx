@@ -10,21 +10,21 @@ import {
   IonFooter,
   useIonViewDidEnter,
   IonToolbar,
-  IonActionSheet,
-  IonToast
+  IonActionSheet
 } from "@ionic/react";
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import "./Home.css";
-import { send, shareSocialOutline, ellipsisHorizontal } from "ionicons/icons";
+import { send, shareSocialOutline } from "ionicons/icons";
 import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { useChats } from "../hooks/useChats";
 import PomodoroTimer from "../components/PomodoroTimer";
+import Talk from "../components/Talk";
+import ShareButton from "../components/ShareButton";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
-import { navigatorShare } from "../utils/utils";
-import { StatusList } from "../interfaces/talk";
+import { ITalk } from "../interfaces/talk";
 
 declare module "react-textarea-autosize";
 const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
@@ -33,8 +33,9 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const [text, setText] = useState<string>("");
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showActionSheet, setShowActionSheet] = useState(false);
+  const [showOwnActionSheet, setShowOwnActionSheet] = useState(false);
   const [currentTalk, setCurrentTalk] = useState();
+  const [isEdited, setIsEdited] = useState<boolean>(false);
 
   // useContext
   const { currentUser, currentUserRef } = useContext(AuthContext);
@@ -48,11 +49,12 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const { pomodoroTimer } = usePomodoroTimer();
   const [
     currentChat,
-    sendMessage,
+    sendTalk,
     currentChatMessages,
     createChat,
     moreReadTalks,
-    deleteMessage
+    deleteMessage,
+    editTalk
   ] = useChats(currentChannel);
 
   // functions
@@ -68,34 +70,43 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
       content.current.scrollToBottom(delay);
     }, 200);
   };
-  const sendTalk = () => {
+  const onSendTalk = () => {
     if (text !== "" && currentUser) {
-      sendMessage(currentUserRef, text);
-      setText("");
-      scrollToTheBottom(400);
+      if (!isEdited) {
+        sendTalk(currentUserRef, text);
+        setText("");
+        scrollToTheBottom(400);
+      } else {
+        currentTalk.body = text;
+        editTalk(currentTalk);
+        setText("");
+        scrollToTheBottom(400);
+      }
     }
   };
   const onEnterPress = (e: any) => {
     if (e.keyCode === 13 && e.shiftKey === true) {
       e.preventDefault();
-      sendTalk();
+      onSendTalk();
     }
   };
-  const share = async () => {
-    const flag = await navigatorShare(currentChat.title);
-    if (!flag) {
-      setShowSuccessToast(true);
+  const onShowActionSheet = (talk: ITalk) => {
+    if (
+      currentUserRef &&
+      talk &&
+      talk.user &&
+      talk.user.ref.path === currentUserRef.path
+    ) {
+      setCurrentTalk(talk);
+      setShowOwnActionSheet(true);
+    } else {
+      // setShowOtherActionSheet(true);
     }
-  };
-  const onShowActionSheet = (talk: any) => {
-    setCurrentTalk(talk);
-    setShowActionSheet(true);
   };
 
   // UseEffect
   useEffect(
     () => {
-      console.log(firstLoading);
       if (!rendered || firstLoading) return;
       scrollToTheBottom(0);
       setFirstLoading(true);
@@ -159,13 +170,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
                 <div>{currentChat ? currentChat.title : ""}</div>
                 <div className="title-id">#{currentChannel}</div>
               </div>
-              <IonButton fill="clear" size="small" onClick={() => share()}>
-                <IonIcon
-                  color="dark"
-                  slot="icon-only"
-                  icon={shareSocialOutline}
-                />
-              </IonButton>
+              <ShareButton title={currentChat ? currentChat.title : ""} />
             </div>
           </IonTitle>
           <IonButtons slot="end">
@@ -186,17 +191,18 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         <audio preload="auto" ref={tinAudio}>
           <source src="assets/audio/tin.ogg" type="audio/ogg" />
         </audio>
-        <IonToast
-          isOpen={showSuccessToast}
-          onDidDismiss={() => setShowSuccessToast(false)}
-          message="URLをコピーしました"
-          position="top"
-          duration={200}
-        />
         <IonActionSheet
-          isOpen={showActionSheet}
-          onDidDismiss={() => setShowActionSheet(false)}
+          isOpen={showOwnActionSheet}
+          onDidDismiss={() => setShowOwnActionSheet(false)}
           buttons={[
+            {
+              text: "編集",
+              handler: () => {
+                setIsEdited(true);
+                setText(currentTalk.body);
+                console.log("Edit clicked");
+              }
+            },
             {
               text: "削除",
               role: "destructive",
@@ -216,35 +222,20 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         />
         <div className="chat-room-wrapper">
           {currentChatMessages &&
-          currentChatMessages.map((talk: any, index: number) => (
-              <div
-                className={`talk-wrapper ${
-                  talk.status === StatusList.Delete
-                    ? "talk-delete-wrapper"
-                    : ""
-                }`}
-                key={index}
-              >
-                <div className="talk-header">
-                  <div className="info">
-                    {talk.num}: {talk.uid} : {talk.displayCreatedAt}
-                  </div>
-                  <div className="menu-button-wrapper">
-                    <IonButton
-                      className="menu-button"
-                      fill="clear"
-                      size="small"
-                      onClick={() => onShowActionSheet(talk)}
-                    >
-                      <IonIcon
-                        color="medium"
-                        slot="icon-only"
-                        icon={ellipsisHorizontal}
-                      />
-                    </IonButton>
-                  </div>
-                </div>
-                <div className="talk-body">{talk.body}</div>
+            currentChatMessages.map((talk: any, index: number) => (
+              <div key={index}>
+                <Talk
+                  talk={talk}
+                  onMenuButtonClick={onShowActionSheet}
+                  ownTalk={
+                    currentUserRef &&
+                    talk.user &&
+                    talk.user.ref.path === currentUserRef.path
+                  }
+                  isEdited={
+                    isEdited && currentTalk && currentTalk.id == talk.id
+                  }
+                />
               </div>
             ))}
         </div>
@@ -262,7 +253,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
           <IonButton
             className="send-button"
             fill="clear"
-            onClick={() => sendTalk()}
+            onClick={() => onSendTalk()}
           >
             <IonIcon slot="icon-only" icon={send} />
           </IonButton>

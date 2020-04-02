@@ -51,8 +51,11 @@ export function useChats(channelId: string) {
       addTalk(currentChat.id, userRef, body);
     }
   };
-  const editTalk = (ref: any, body: string) => {
-    // editTalk(channelId, ref, body);
+  const editTalk = (talk: ITalk) => {
+    if (talk) {
+      talk.status = StatusList.Edited;
+      putTalk(channelId, talk);
+    }
   };
   const deleteTalk = (talk: ITalk) => {
     if (talk) {
@@ -109,6 +112,7 @@ export function useChats(channelId: string) {
     currentChatTalks,
     createChat,
     moreReadTalks,
-    deleteTalk
+    deleteTalk,
+    editTalk
   ];
 }

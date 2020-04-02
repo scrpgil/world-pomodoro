@@ -147,6 +147,13 @@ body {
   --ion-color-light-contrast-rgb: 255, 255, 255;
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
+
+  --ion-color-edited: #302E26;
+  --ion-color-edited-rgb: 48,46,38;
+  --ion-color-edited-contrast: #ffffff;
+  --ion-color-edited-contrast-rgb: 255,255,255;
+  --ion-color-edited-shade: #2a2821;
+  --ion-color-edited-tint: #45433c;
 }
 
 /*

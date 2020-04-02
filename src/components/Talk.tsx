@@ -6,24 +6,34 @@ import { ITalk, StatusList } from "../interfaces/talk";
 
 interface ContainerProps {
   talk: ITalk;
-  index: number;
-  onShowActionSheet: any;
+  onMenuButtonClick?: any;
+  ownTalk: boolean;
+  isEdited: boolean;
 }
 
-const Talk: React.FC<ContainerProps> = ({ talk, index, onShowActionSheet }) => {
+const Talk: React.FC<ContainerProps> = ({
+  talk,
+  onMenuButtonClick = () => {},
+  ownTalk,
+  isEdited
+}) => {
   return (
     <div
-      className={`talk-wrapper ${
+      className={`talk-wrapper ${ownTalk ? "own-talk" : "other-talk"} ${
         talk.status === StatusList.Delete ? "talk-delete-wrapper" : ""
-      }`}
-      key={index}
+      } ${isEdited ? "is-edited" : ""}`}
     >
       <div className="talk-header">
         <div className="info">
           {talk.num}: {talk.uid} : {talk.displayCreatedAt}
         </div>
         <div className="menu-button-wrapper">
-          <IonButton className="menu-button" fill="clear" size="small">
+          <IonButton
+            className="menu-button"
+            fill="clear"
+            size="small"
+            onClick={() => onMenuButtonClick(talk)}
+          >
             <IonIcon
               color="medium"
               slot="icon-only"

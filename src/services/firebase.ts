@@ -65,7 +65,9 @@ export const addTalk = async (
 ) => {
   const ref = getChatRoomRef(chatRoomId);
   const totalCount = await getCount(ref);
+  console.log(userRef);
   console.log(ref);
+  console.log(totalCount);
   return ref.collection("talks").add({
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     uid: userRef.id,

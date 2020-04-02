@@ -28,6 +28,12 @@
 .talk-wrapper:hover {
   background-color: var(--ion-item-background);
 }
-.talk-wrapper:hover .talk-header .menu-button-wrapper{
+.talk-wrapper:hover .talk-header .menu-button-wrapper {
   visibility: visible;
+}
+.talk-wrapper.other-talk .menu-button-wrapper {
+  display: none;
+}
+.talk-wrapper.is-edited {
+  background-color: var(--ion-color-edited);
 }
