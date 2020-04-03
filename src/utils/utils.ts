@@ -68,3 +68,42 @@ export const playAudio = (src: string) => {
     console.log(e);
   }
 };
+
+export const autoLinker = (str: string): string => {
+  var regexp_url = /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/;
+  var regexp_makeLink = (_: any, url: string, __: any, href: string) => {
+    return '<a target="_blank" href="h' + href + '">' + url + "</a>";
+  };
+
+  return str.replace(regexp_url, regexp_makeLink);
+};
+
+export const replaceAnchor = (value: string): string => {
+  value = value.replace(/</g, "&lt;");
+  var regexp_url = />>([0-9]*)/g; // ']))/;
+  var regexp_makeLink = (_: any, url: string, ___: any, ____: string) => {
+    return '<a href="#no' + url + '">>>' + url + "</a>";
+  };
+  return value.replace(regexp_url, regexp_makeLink);
+};
+
+export const replaceImage = (str: string): string => {
+  const splits = str.match(
+    /((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+).(png|jpg|jpeg|gif))/g
+  );
+  if (!splits) {
+    return "";
+  }
+  let anchors = "";
+  for (let idx = 0; idx < splits.length; idx++) {
+    const href = splits[idx];
+    const image =
+      '<a class="autolink-image-wrapper" target="_blank" href="h' +
+      href +
+      '"><img class="autolink-image" style="height:150px" src="h' +
+      href +
+      '"/></a>';
+    anchors = anchors + image;
+  }
+  return anchors;
+};

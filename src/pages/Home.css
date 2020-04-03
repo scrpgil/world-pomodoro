@@ -14,8 +14,9 @@ ion-title .title-id {
   text-align: center;
 }
 .p-textarea {
-  margin: 12px;
+  margin: 12px 12px 4px;
   display: flex;
+  height: 52px;
   align-items: center;
   background-color: #1f2124;
   border-radius: 8px;
@@ -45,4 +46,11 @@ ion-title .title-id {
 .p-textarea.active .send-button {
   background-color: #266c52;
   color: #fff;
+}
+.edit-ctrl-wrapper {
+  display: block;
+  padding: 0px 12px 8px;
+}
+.edit-cancel-button {
+  margin-right: 8px;
 }

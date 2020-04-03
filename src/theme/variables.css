@@ -154,7 +154,28 @@ body {
   --ion-color-edited-contrast-rgb: 255,255,255;
   --ion-color-edited-shade: #2a2821;
   --ion-color-edited-tint: #45433c;
+
+  --ion-color-send: #266c52;
+  --ion-color-send-rgb: 38,108,82;
+  --ion-color-send-contrast: #ffffff;
+  --ion-color-send-contrast-rgb: 255,255,255;
+  --ion-color-send-shade: #215f48;
+  --ion-color-send-tint: #3c7b63;
 }
+
+/*
+   * Custom Color
+   * -------------------------------------------
+   */
+.ion-color-send {
+  --ion-color-base: var(--ion-color-send);
+  --ion-color-base-rgb: var(--ion-color-send-rgb);
+  --ion-color-contrast: var(--ion-color-send-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-send-contrast-rgb);
+  --ion-color-shade: var(--ion-color-send-shade);
+  --ion-color-tint: var(--ion-color-send-tint);
+}
+
 
 /*
    * iOS Dark Theme

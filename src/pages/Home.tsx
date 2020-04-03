@@ -32,7 +32,6 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const [rendered, setRendered] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [firstLoading, setFirstLoading] = useState<boolean>(false);
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showOwnActionSheet, setShowOwnActionSheet] = useState(false);
   const [currentTalk, setCurrentTalk] = useState();
   const [isEdited, setIsEdited] = useState<boolean>(false);
@@ -71,23 +70,31 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
     }, 200);
   };
   const onSendTalk = () => {
-    if (text !== "" && currentUser) {
-      if (!isEdited) {
-        sendTalk(currentUserRef, text);
-        setText("");
-        scrollToTheBottom(400);
-      } else {
-        currentTalk.body = text;
-        editTalk(currentTalk);
-        setText("");
-        scrollToTheBottom(400);
-      }
+    if (text !== "" && currentUser && !isEdited) {
+      // 普通の送信
+      sendTalk(currentUserRef, text);
+      setText("");
+      scrollToTheBottom(400);
+    }
+  };
+  const onEditFix = () => {
+    if (text !== "" && currentUser && isEdited) {
+      // 編集中
+      currentTalk.body = text;
+      setIsEdited(false);
+      editTalk(currentTalk);
+      setText("");
+      scrollToTheBottom(400);
     }
   };
   const onEnterPress = (e: any) => {
     if (e.keyCode === 13 && e.shiftKey === true) {
       e.preventDefault();
-      onSendTalk();
+      if (isEdited) {
+        onEditFix();
+      } else {
+        onSendTalk();
+      }
     }
   };
   const onShowActionSheet = (talk: ITalk) => {
@@ -223,7 +230,7 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
         <div className="chat-room-wrapper">
           {currentChatMessages &&
             currentChatMessages.map((talk: any, index: number) => (
-              <div key={index}>
+              <div key={index} id={"no" + index}>
                 <Talk
                   talk={talk}
                   onMenuButtonClick={onShowActionSheet}
@@ -252,10 +259,33 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
           </TextareaAutosize>
           <IonButton
             className="send-button"
+            style={{ display: isEdited ? "none" : "" }}
             fill="clear"
             onClick={() => onSendTalk()}
           >
             <IonIcon slot="icon-only" icon={send} />
+          </IonButton>
+        </div>
+        <div
+          className="edit-ctrl-wrapper"
+          style={{ display: isEdited ? "" : "none" }}
+        >
+          <IonButton
+            className="edit-cancel-button"
+            fill="outline"
+            color="medium"
+            size="small"
+            onClick={() => setIsEdited(false)}
+          >
+            キャンセル
+          </IonButton>
+          <IonButton
+            color="send"
+            className="edit-fix-button"
+            size="small"
+            onClick={() => onEditFix()}
+          >
+            変更を保存
           </IonButton>
         </div>
       </IonFooter>

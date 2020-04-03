@@ -3,6 +3,7 @@ import { IonIcon, IonButton } from "@ionic/react";
 import { ellipsisHorizontal } from "ionicons/icons";
 import "./Talk.css";
 import { ITalk, StatusList } from "../interfaces/talk";
+import { autoLinker, replaceAnchor } from "../utils/utils";
 
 interface ContainerProps {
   talk: ITalk;
@@ -26,6 +27,11 @@ const Talk: React.FC<ContainerProps> = ({
       <div className="talk-header">
         <div className="info">
           {talk.num}: {talk.uid} : {talk.displayCreatedAt}
+          <span
+            style={{ display: talk.status === StatusList.Edited ? "" : "none" }}
+          >
+            (編集済)
+          </span>
         </div>
         <div className="menu-button-wrapper">
           <IonButton
@@ -42,7 +48,10 @@ const Talk: React.FC<ContainerProps> = ({
           </IonButton>
         </div>
       </div>
-      <div className="talk-body">{talk.body}</div>
+      <div
+        className="talk-body"
+        dangerouslySetInnerHTML={{ __html: autoLinker(replaceAnchor(talk.body)) }}
+      />
     </div>
   );
 };

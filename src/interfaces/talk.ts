@@ -9,7 +9,7 @@ export interface ITalk {
   num?: number;
   status?: StatusList;
   uid?: string;
-  body?: string;
+  body: string;
   displayCreatedAt?: string;
   createdAt?: Date;
   user?: { ref: DocumentReference };
