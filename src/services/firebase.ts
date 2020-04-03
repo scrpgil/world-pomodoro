@@ -21,7 +21,30 @@ const auth = firebase.auth();
 export default auth;
 
 export const authenticateAnonymously = () => {
-  return firebase.auth().signInAnonymously();
+  var user: any = firebase.auth().currentUser;
+  if (!user) {
+    return firebase.auth().signInAnonymously();
+  } else {
+    return;
+  }
+};
+
+export const authenticateTwitter = () => {
+  let provider = new firebase.auth.TwitterAuthProvider();
+  var user: any = firebase.auth().currentUser;
+  user
+    .linkWithPopup(provider)
+    .then((result: any) => {
+      console.log(result);
+    })
+    .catch((error: any) => {
+      console.log(error);
+      firebase
+        .auth()
+        .signInWithRedirect(provider)
+        .then(res => {})
+        .catch(err => {});
+    });
 };
 
 export const getUserRef = (userId: string) => {

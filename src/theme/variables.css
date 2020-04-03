@@ -77,6 +77,27 @@ http://ionicframework.com/docs/theming/ */
 
   --ion-color-start: #ee7975;
   --ion-color-break-time: #90e493;
+
+  --ion-color-textarea-background: #F7F7F7;
+  --ion-color-textarea-background-rgb: 247,247,247;
+  --ion-color-textarea-background-contrast: #000000;
+  --ion-color-textarea-background-contrast-rgb: 0,0,0;
+  --ion-color-textarea-background-shade: #d9d9d9;
+  --ion-color-textarea-background-tint: #f8f8f8;
+}
+
+.ion-color-textarea-background {
+  --ion-color-base: var(--ion-color-textarea-background);
+  --ion-color-base-rgb: var(--ion-color-textarea-background-rgb);
+  --ion-color-contrast: var(--ion-color-textarea-background-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-textarea-background-contrast-rgb);
+  --ion-color-shade: var(--ion-color-textarea-background-shade);
+  --ion-color-tint: var(--ion-color-textarea-background-tint);
+}
+
+body {
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
 }
 
 /*
@@ -84,7 +105,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-body {
+body.dark {
   --ion-color-primary: #428cff;
   --ion-color-primary-rgb: 66, 140, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -161,8 +182,14 @@ body {
   --ion-color-send-contrast-rgb: 255,255,255;
   --ion-color-send-shade: #215f48;
   --ion-color-send-tint: #3c7b63;
-}
 
+  --ion-color-textarea-background: #1f2124;
+  --ion-color-textarea-background-rgb: 31,33,36;
+  --ion-color-textarea-background-contrast: #ffffff;
+  --ion-color-textarea-background-contrast-rgb: 255,255,255;
+  --ion-color-textarea-background-shade: #1b1d20;
+  --ion-color-textarea-background-tint: #35373a;
+}
 /*
    * Custom Color
    * -------------------------------------------
@@ -176,13 +203,23 @@ body {
   --ion-color-tint: var(--ion-color-send-tint);
 }
 
+.ion-color-textarea-background {
+  --ion-color-base: var(--ion-color-textarea-background);
+  --ion-color-base-rgb: var(--ion-color-textarea-background-rgb);
+  --ion-color-contrast: var(--ion-color-textarea-background-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-textarea-background-contrast-rgb);
+  --ion-color-shade: var(--ion-color-textarea-background-shade);
+  --ion-color-tint: var(--ion-color-textarea-background-tint);
+}
+
+
 
 /*
    * iOS Dark Theme
    * -------------------------------------------
    */
 
-.ios body {
+.ios body.dark {
   --ion-background-color: #000000;
   --ion-background-color-rgb: 0, 0, 0;
 
@@ -220,7 +257,7 @@ body {
    * -------------------------------------------
    */
 
-.md body {
+.md body.dark {
   --ion-background-color: #121212;
   --ion-background-color-rgb: 18, 18, 18;
 

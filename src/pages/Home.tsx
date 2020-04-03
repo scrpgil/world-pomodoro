@@ -15,7 +15,7 @@ import {
 import React, { useRef, useState, useContext, useEffect } from "react";
 import { RouteComponentProps } from "react-router";
 import "./Home.css";
-import { send, shareSocialOutline } from "ionicons/icons";
+import { send } from "ionicons/icons";
 import TextareaAutosize from "react-textarea-autosize";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { useChats } from "../hooks/useChats";

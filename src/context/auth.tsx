@@ -18,7 +18,6 @@ const AuthContext = createContext<IAuthContext>({
   currentUserRef: undefined
 });
 
-authenticateAnonymously();
 const AuthProvider = (props: any) => {
   // Contextに持たせるcurrentUserは内部的にはuseStateで管理
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(
@@ -31,10 +30,14 @@ const AuthProvider = (props: any) => {
   useEffect(() => {
     // Firebase Authのメソッド。ログイン状態が変化すると呼び出される
     auth.onAuthStateChanged(async (user: any) => {
-      setCurrentUser(user);
-      if (user && user.uid) {
-        const userRef: any = await getUserRef(user.uid);
-        setCurrentUserRef(userRef);
+      if (user) {
+        setCurrentUser(user);
+        if (user && user.uid) {
+          const userRef: any = await getUserRef(user.uid);
+          setCurrentUserRef(userRef);
+        }
+      } else {
+        authenticateAnonymously();
       }
     });
   }, []);

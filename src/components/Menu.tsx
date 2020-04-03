@@ -1,21 +1,26 @@
 import {
   IonContent,
   IonItem,
+  IonIcon,
+  IonButton,
   IonLabel,
   IonList,
   IonListHeader,
   IonMenu,
   IonAlert,
   IonMenuToggle,
+  IonToggle,
   IonNote
 } from "@ionic/react";
 import React, { useState, useContext } from "react";
+import { moon } from "ionicons/icons";
 import { withRouter } from "react-router-dom";
 import "./Menu.css";
 import { AuthContext } from "../context/Auth";
 import { ChannelContext } from "../context/Channel";
 import { useChats } from "../hooks/useChats";
 import { IChatRoom } from "../interfaces/chat-room";
+import { authenticateTwitter } from "../services/firebase";
 
 interface AppPage {
   url: string;
@@ -77,12 +82,26 @@ const Menu: React.FunctionComponent = () => {
   };
   addAppPage(currentChat);
 
+  const toggleDarkmode = (event: any) => {
+    document.body.classList.toggle("dark", event.target.checked);
+  };
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <h1 className="p-title">みんなでポモドーロ</h1>
         <IonList id="inbox-list">
-          <IonListHeader>uid</IonListHeader>
+          <IonListHeader>
+            uid
+            <IonButton
+              style={{
+                dispaly: currentUser && currentUser.isAnonymous ? "" : "none"
+              }}
+              size="small"
+              onClick={() => authenticateTwitter()}
+            >
+              Twitterでログイン
+            </IonButton>
+          </IonListHeader>
           <IonNote>{currentUser ? currentUser.uid : ""}</IonNote>
           <IonListHeader>channel</IonListHeader>
           {appPages.map((appPage, index) => {
@@ -112,6 +131,20 @@ const Menu: React.FunctionComponent = () => {
             detail={false}
           >
             <IonLabel>+ add channel</IonLabel>
+          </IonItem>
+        </IonList>
+        <IonList id="inbox-list">
+          <IonItem lines="none">
+            <IonIcon slot="start" icon={moon} />
+            <IonLabel>ダークモード</IonLabel>
+            <IonToggle
+              checked
+              id="themetoggle"
+              slot="end"
+              onIonChange={e => {
+                toggleDarkmode(e);
+              }}
+            />
           </IonItem>
         </IonList>
         <IonAlert
