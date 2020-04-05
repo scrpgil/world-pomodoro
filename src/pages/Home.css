@@ -16,12 +16,12 @@ ion-title .title-id {
 .p-textarea {
   margin: 12px 12px 4px;
   display: flex;
-  height: 52px;
   align-items: center;
   background-color: var(--ion-color-textarea-background);
   border-radius: 8px;
   border: 1px solid #797b7d;
   padding: 2px 4px;
+  min-height: 52px;
 }
 .p-textarea textarea {
   font-family: "aahub";

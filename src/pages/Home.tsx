@@ -266,28 +266,27 @@ const Home: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
             <IonIcon slot="icon-only" icon={send} />
           </IonButton>
         </div>
-        <div
-          className="edit-ctrl-wrapper"
-          style={{ display: isEdited ? "" : "none" }}
-        >
-          <IonButton
-            className="edit-cancel-button"
-            fill="outline"
-            color="medium"
-            size="small"
-            onClick={() => setIsEdited(false)}
-          >
-            キャンセル
-          </IonButton>
-          <IonButton
-            color="send"
-            className="edit-fix-button"
-            size="small"
-            onClick={() => onEditFix()}
-          >
-            変更を保存
-          </IonButton>
-        </div>
+        {isEdited && (
+          <div className="edit-ctrl-wrapper">
+            <IonButton
+              className="edit-cancel-button"
+              fill="outline"
+              color="medium"
+              size="small"
+              onClick={() => setIsEdited(false)}
+            >
+              キャンセル
+            </IonButton>
+            <IonButton
+              color="send"
+              className="edit-fix-button"
+              size="small"
+              onClick={() => onEditFix()}
+            >
+              変更を保存
+            </IonButton>
+          </div>
+        )}
       </IonFooter>
     </IonPage>
   );

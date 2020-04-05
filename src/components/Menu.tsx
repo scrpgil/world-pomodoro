@@ -94,7 +94,7 @@ const Menu: React.FunctionComponent = () => {
             uid
             <IonButton
               style={{
-                dispaly: currentUser && currentUser.isAnonymous ? "" : "none"
+                display: currentUser && currentUser.isAnonymous ? "" : "none"
               }}
               size="small"
               onClick={() => authenticateTwitter()}
